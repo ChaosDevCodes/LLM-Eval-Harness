@@ -1,0 +1,32 @@
+[
+  {
+    "id": "fix-off-by-one",
+    "prompt": "The function `last_n` in utils.py should return the last n items of a list but is buggy. Fix it so `pytest -q` passes.",
+    "files": {
+      "utils.py": "def last_n(items, n):\n    return items[-n - 1:]\n",
+      "test_utils.py": "from utils import last_n\n\ndef test_last_n():\n    assert last_n([1, 2, 3, 4], 2) == [3, 4]\n    assert last_n([1, 2], 5) == [1, 2]\n    assert last_n([1, 2, 3], 0) == []\n"
+    },
+    "check": "python -m pytest -q",
+    "tags": ["bugfix"]
+  },
+  {
+    "id": "add-function",
+    "prompt": "Create mathx.py with a function `is_prime(n)` returning True for primes and False otherwise (negatives, 0 and 1 are not prime).",
+    "files": {
+      "test_mathx.py": "from mathx import is_prime\n\ndef test_prime():\n    assert [n for n in range(-2, 20) if is_prime(n)] == [2, 3, 5, 7, 11, 13, 17, 19]\n"
+    },
+    "check": "python -m pytest -q",
+    "tags": ["feature"]
+  },
+  {
+    "id": "rename-and-update",
+    "prompt": "Rename the function `calc` in core.py to `compute_total` and update every caller in the project. Do not leave the old name anywhere.",
+    "files": {
+      "core.py": "def calc(xs):\n    return sum(xs)\n",
+      "app.py": "from core import calc\n\ndef run():\n    return calc([1, 2, 3])\n",
+      "test_app.py": "from app import run\n\ndef test_run():\n    assert run() == 6\n"
+    },
+    "check": "python -m pytest -q && ! grep -rw calc --include=*.py --exclude=test_*.py .",
+    "tags": ["refactor"]
+  }
+]
